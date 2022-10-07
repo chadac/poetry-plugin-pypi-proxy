@@ -1,17 +1,13 @@
 from __future__ import annotations
 
 import shutil
+import urllib.parse as urlparse
 from pathlib import Path
 
 from poetry.core.semver.version import Version
 from poetry.repositories.link_sources.html import SimpleRepositoryPage
 
 from poetry_pypi_proxy_plugin.plugin import LegacyProxyRepository
-
-try:
-    import urllib.parse as urlparse
-except ImportError:
-    import urlparse
 
 
 class MockRepository(LegacyProxyRepository):

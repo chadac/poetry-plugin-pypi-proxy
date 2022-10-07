@@ -27,6 +27,9 @@ jobs:
         run: |
           pip install pipx
           pipx install poetry
+          pipx install flake8
+          pipx install isort
+          pipx install black
       - name: Install dependencies
         run: poetry install --all-extras
       - name: Run mypy
