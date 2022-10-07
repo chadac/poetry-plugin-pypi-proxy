@@ -33,7 +33,9 @@ class LegacyProxyRepository(LegacyRepository):
     directly from Pypi.
     """
 
-    def package(self, name: str, version: Version, extras: list[str] | None = None) -> Package:
+    def package(
+        self, name: str, version: Version, extras: list[str] | None = None
+    ) -> Package:
         """
         Pull package information without proxy-specific info.
 
@@ -104,6 +106,8 @@ class PypiProxyPlugin(Plugin):
         )
 
         # If this is a publish command to Pypi, we'll silenly redirect to the proxy
-        if io.input.arguments["command"] == "publish" and not io.input.option("repository"):
+        if io.input.arguments["command"] == "publish" and not io.input.option(
+            "repository"
+        ):
             io.input.set_option("repository", proxy_id)
             poetry.config._config["repositories"] = {proxy_id: {"url": proxy_url}}
