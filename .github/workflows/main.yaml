@@ -1,0 +1,67 @@
+name: Review
+on:
+  - push
+  - pull_request
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - uses: pre-commit/action@v3.0.0
+  checks:
+    name: Check typing and linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: Setup env
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Bootstrap Poetry
+        run: |
+          pip install pipx
+          pipx install poetry
+      - name: Install dependencies
+        run: poetry install --all-extras
+      - name: Run mypy
+        run: poetry run mypy
+      - name: Run flake8
+        run: poetry run flake8
+      - name: Run isort
+        run: poetry run isort . -c
+      - name: Run black
+        run: poetry run black . --check
+  tests:
+    name: ${{ matrix.os }} / ${{ matrix.python-version }} / ${{ matrix.poetry-version }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-2022, macos-12]
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11-dev"]
+        poetry-version:
+          - "git+https://github.com/python-poetry/poetry.git"
+          - "poetry==1.2.0"
+          - "poetry==1.2.1"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Setup env
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Bootstrap Poetry
+        run: |
+          pip install pipx
+          pipx install poetry
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Install dependencies
+        run: |
+          poetry install --only test
+          # Override default Poetry version for compatibility checks
+          poetry run pip install ${{ matrix.poetry-version }}
+      - name: Run tests
+        run: poetry run pytest
