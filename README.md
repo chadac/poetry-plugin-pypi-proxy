@@ -1,4 +1,4 @@
-# poetry-pypi-proxy-plugin
+# poetry-plugin-pypi-proxy
 
 This is a plugin that enables developers who use internal proxies of
 Pypi to integrate their projects seamlessly with Poetry without
@@ -17,7 +17,7 @@ automatically redirected to the proxy as well.
 Start by installing Poetry with pipx:
 
     pipx install poetry
-    pipx runpip poetry install git+ssh://github.com/chadac/poetry-pypi-proxy-plugin
+    pipx runpip poetry install git+ssh://github.com/chadac/poetry-plugin-pypi-proxy
 
 If you have already installed poetry, you only need to run the second command.
 

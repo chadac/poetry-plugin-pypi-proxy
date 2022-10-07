@@ -1,12 +1,12 @@
 [tool.poetry]
-name = "poetry-pypi-proxy-plugin"
+name = "poetry-plugin-pypi-proxy"
 version = "0.1.0"
 description = "Aliases PIP_INDEX_URL silently within Poetry to point at a new repository."
 authors = ["Chad Crawford <chadcr@amazon.com>"]
 license = "MIT"
 readme = "README.md"
 packages = [
-    { include = "poetry_pypi_proxy_plugin", from = "src" }
+    { include = "poetry_plugin_pypi_proxy", from = "src" }
 ]
 include = [
     { path = "tests", format = "sdist" }
@@ -44,7 +44,7 @@ module = [
 ignore_missing_imports = true
 
 [tool.poetry.plugins."poetry.plugin"]
-poetry-pypi-proxy = "poetry_pypi_proxy_plugin.plugin:PypiProxyPlugin"
+poetry-pypi-proxy = "poetry_plugin_pypi_proxy.plugin:PypiProxyPlugin"
 
 [build-system]
 requires = ["poetry-core"]

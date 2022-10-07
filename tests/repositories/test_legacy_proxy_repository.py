@@ -7,7 +7,7 @@ from pathlib import Path
 from poetry.core.semver.version import Version
 from poetry.repositories.link_sources.html import SimpleRepositoryPage
 
-from poetry_pypi_proxy_plugin.plugin import LegacyProxyRepository
+from poetry_plugin_pypi_proxy.plugin import LegacyProxyRepository
 
 
 class MockRepository(LegacyProxyRepository):
