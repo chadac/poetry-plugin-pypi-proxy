@@ -17,10 +17,9 @@ automatically redirected to the proxy as well.
 Start by installing Poetry with pipx:
 
     pipx install poetry
-    pipx runpip poetry install git+ssh://github.com/chadac/poetry-plugin-pypi-proxy
+    pipx runpip poetry install poetry-plugin-pypi-proxy
 
 If you have already installed poetry, you only need to run the second command.
-
 
 Now, any Poetry project will automatically use the proxy server
 specified by `PIP_INDEX_URL`. You may add this to your `rc` file
