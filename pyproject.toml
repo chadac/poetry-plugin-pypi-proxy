@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "poetry-pypi-proxy-plugin"
-version = "0.0.1"
+version = "0.1.0"
 description = "Aliases PIP_INDEX_URL silently within Poetry to point at a new repository."
 authors = ["Chad Crawford <chadcr@amazon.com>"]
 license = "MIT"
@@ -27,7 +27,6 @@ pytest = "^7.1.3"
 [tool.poetry.group.typing.dependencies]
 mypy = "^0.982"
 
-
 [tool.poetry.group.linting.dependencies]
 flake8 = "^5.0.4"
 black = "^22.10.0"
@@ -43,6 +42,9 @@ preview = true
 
 [tool.mypy]
 files = ["src", "tests"]
+
+[tool.poetry.plugins."poetry.plugin"]
+poetry-pypi-proxy = "poetry_pypi_proxy_plugin.plugin:PypiProxyPlugin"
 
 [build-system]
 requires = ["poetry-core"]

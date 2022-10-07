@@ -1,0 +1,25 @@
+{
+  "name": "py",
+  "files": [
+    {
+      "filename": "py-1.5.3-py2.py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/67/a5/f77982214dd4c8fd104b066f249adea2c49e25e8703d284382eb5e9ab35a/py-1.5.3-py2.py3-none-any.whl",
+      "hashes": {
+        "md5": "3184fb17d224b073117a25336040d7c7",
+        "sha256": "983f77f3331356039fdd792e9220b7b8ee1aa6bd2b25f567a963ff1de5a64f6a"
+      }
+    },
+    {
+      "filename": "py-1.5.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/f7/84/b4c6e84672c4ceb94f727f3da8344037b62cee960d80e999b1cd9b832d83/py-1.5.3.tar.gz",
+      "hashes": {
+        "md5": "667d37a148ad9fb81266492903f2d880",
+        "sha256": "29c9fab495d7528e80ba1e343b958684f4ace687327e6f789a94bf3d1915f881"
+      }
+    }
+  ],
+  "meta": {
+    "api-version": "1.0",
+    "_last-serial": 3694828
+  }
+}
