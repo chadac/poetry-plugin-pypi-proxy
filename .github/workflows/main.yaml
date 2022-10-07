@@ -1,7 +1,9 @@
 name: Review
 on:
-  - push
-  - pull_request
+  push:
+    branches:
+      - 'main'
+  pull_request:
 jobs:
   pre-commit:
     runs-on: ubuntu-latest
