@@ -77,7 +77,7 @@ class PypiProxyPlugin(Plugin):
             return
 
         # Ignore the simple/ part, proper for PIP_INDEX_URL but not for publishing.
-        proxy_url = proxy_url.removesuffix("simple/")
+        proxy_url = proxy_url.removesuffix("simple")
 
         # Add debug message so that users are certain the substitution happens
         io.write_line(
