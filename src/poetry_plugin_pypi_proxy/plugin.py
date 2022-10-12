@@ -76,8 +76,8 @@ class PypiProxyPlugin(Plugin):
             )
             return
 
-        # Ignore the simple/ part, proper for PIP_INDEX_URL but not for publishing.
-        proxy_url = proxy_url.removesuffix("simple/")
+        # Parse the proper for PIP_INDEX_URL but not for publishing.
+        proxy_url = self.parse_url(proxy_url)
 
         # Add debug message so that users are certain the substitution happens
         io.write_line(
@@ -106,8 +106,11 @@ class PypiProxyPlugin(Plugin):
         )
 
         # If this is a publish command to Pypi, we'll silenly redirect to the proxy
-        if io.input.arguments["command"] == "publish" and not io.input.option(
-            "repository"
-        ):
+        if io.input.arguments["command"] == "publish" and not io.input.option("repository"):
             io.input.set_option("repository", proxy_id)
             poetry.config._config["repositories"] = {proxy_id: {"url": proxy_url}}
+
+  
+    # Removf suffix from url appropriately so it can be used by the proxy object
+    def parse_url(self, url: str) -> str:
+        return url.removesuffix("/").removesuffix("simple")
