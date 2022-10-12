@@ -7,7 +7,7 @@ import os
 from cleo.io.io import IO
 from cleo.io.outputs.output import Verbosity
 from poetry.core.packages.package import Package
-from poetry.core.constraints.version import Version
+from poetry.core.semver.version import Version
 from poetry.plugins.plugin import Plugin
 from poetry.poetry import Poetry
 from poetry.repositories.legacy_repository import LegacyRepository
@@ -106,11 +106,12 @@ class PypiProxyPlugin(Plugin):
         )
 
         # If this is a publish command to Pypi, we'll silenly redirect to the proxy
-        if io.input.arguments["command"] == "publish" and not io.input.option("repository"):
+        if io.input.arguments["command"] == "publish" and not io.input.option(
+            "repository"
+        ):
             io.input.set_option("repository", proxy_id)
             poetry.config._config["repositories"] = {proxy_id: {"url": proxy_url}}
 
-  
     # Removf suffix from url appropriately so it can be used by the proxy object
     def parse_url(self, url: str) -> str:
         return url.removesuffix("/").removesuffix("simple")
