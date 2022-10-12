@@ -112,6 +112,12 @@ class PypiProxyPlugin(Plugin):
             io.input.set_option("repository", proxy_id)
             poetry.config._config["repositories"] = {proxy_id: {"url": proxy_url}}
 
-    # Removf suffix from url appropriately so it can be used by the proxy object
+    # Remove suffix from url appropriately so it can be used by the proxy object
     def parse_url(self, url: str) -> str:
-        return url.removesuffix("/").removesuffix("simple")
+        to_remove = ["simple", "simple/"]
+        for rem in to_remove:
+            if url.endswith(rem):
+                new_url = url[: -len(rem)]
+                break
+
+        return new_url
