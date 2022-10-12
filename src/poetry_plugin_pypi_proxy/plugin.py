@@ -7,7 +7,7 @@ import os
 from cleo.io.io import IO
 from cleo.io.outputs.output import Verbosity
 from poetry.core.packages.package import Package
-from poetry.core.semver.version import Version
+from poetry.core.constraints.version import Version
 from poetry.plugins.plugin import Plugin
 from poetry.poetry import Poetry
 from poetry.repositories.legacy_repository import LegacyRepository
