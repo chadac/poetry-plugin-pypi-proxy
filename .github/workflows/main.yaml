@@ -27,6 +27,9 @@ jobs:
         run: |
           pip install pipx
           pipx install poetry
+          pipx install flake8
+          pipx install isort
+          pipx install black
       - name: Install dependencies
         run: poetry install --all-extras
       - name: Run mypy
@@ -63,7 +66,6 @@ jobs:
       - name: Install dependencies
         run: |
           poetry install --only test
-          # Override default Poetry version for compatibility checks
           poetry run pip install ${{ matrix.poetry-version }}
       - name: Run tests
         run: poetry run pytest
