@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import copy
-import hashlib
 import os
 
 from cleo.io.io import IO
@@ -12,17 +11,7 @@ from poetry.plugins.plugin import Plugin
 from poetry.poetry import Poetry
 from poetry.repositories.legacy_repository import LegacyRepository
 
-
-def get_repo_id(repo_url: str) -> str:
-    """
-    Generate a unique identifier for the proxy server.
-
-    Note that this can change between clones of this project.  This
-    is used silently when caching packages and for the publisher, so
-    it should have no effect on your build processes.
-    """
-    key = hashlib.md5((repo_url).encode()).hexdigest()
-    return f"pypi-proxy-{key}"
+from poetry_plugin_pypi_proxy.utils import get_repo_id, parse_url
 
 
 class LegacyProxyRepository(LegacyRepository):
@@ -77,7 +66,7 @@ class PypiProxyPlugin(Plugin):
             return
 
         # Parse the proper for PIP_INDEX_URL but not for publishing.
-        proxy_url = self.parse_url(proxy_url)
+        proxy_url = parse_url(proxy_url)
 
         # Add debug message so that users are certain the substitution happens
         io.write_line(
@@ -111,13 +100,3 @@ class PypiProxyPlugin(Plugin):
         ):
             io.input.set_option("repository", proxy_id)
             poetry.config._config["repositories"] = {proxy_id: {"url": proxy_url}}
-
-    # Remove suffix from url appropriately so it can be used by the proxy object
-    def parse_url(self, url: str) -> str:
-        to_remove = ["simple", "simple/"]
-        for rem in to_remove:
-            if url.endswith(rem):
-                new_url = url[: -len(rem)]
-                break
-
-        return new_url

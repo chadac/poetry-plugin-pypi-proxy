@@ -1,8 +1,7 @@
-from poetry_plugin_pypi_proxy.plugin import PypiProxyPlugin
+from poetry_plugin_pypi_proxy.utils import parse_url
 
 
 def test_parse_url():
-    plugin = PypiProxyPlugin()
     input = [
         "http://proxy.org/pypi/simple",
         "http://proxy.org/pypi/simple/",
@@ -17,5 +16,5 @@ def test_parse_url():
     ]
 
     for index in range(len(input)):
-        actual = plugin.parse_url(input[index])
+        actual = parse_url(input[index])
         assert actual == expected[index]
