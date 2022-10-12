@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import copy
-import hashlib
 import os
 
 from cleo.io.io import IO
@@ -12,17 +11,7 @@ from poetry.plugins.plugin import Plugin
 from poetry.poetry import Poetry
 from poetry.repositories.legacy_repository import LegacyRepository
 
-
-def get_repo_id(repo_url: str) -> str:
-    """
-    Generate a unique identifier for the proxy server.
-
-    Note that this can change between clones of this project.  This
-    is used silently when caching packages and for the publisher, so
-    it should have no effect on your build processes.
-    """
-    key = hashlib.md5((repo_url).encode()).hexdigest()
-    return f"pypi-proxy-{key}"
+from poetry_plugin_pypi_proxy.utils import get_repo_id, parse_url
 
 
 class LegacyProxyRepository(LegacyRepository):
@@ -76,8 +65,8 @@ class PypiProxyPlugin(Plugin):
             )
             return
 
-        # Ignore the simple/ part, proper for PIP_INDEX_URL but not for publishing.
-        proxy_url = proxy_url.removesuffix("simple/")
+        # Parse the proper for PIP_INDEX_URL but not for publishing.
+        proxy_url = parse_url(proxy_url)
 
         # Add debug message so that users are certain the substitution happens
         io.write_line(
