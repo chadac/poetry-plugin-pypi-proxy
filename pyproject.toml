@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "poetry-plugin-pypi-proxy"
-version = "0.1.1"
+version = "0.1.2"
 description = "Aliases PIP_INDEX_URL silently within Poetry to point at a new repository."
 authors = ["Chad Crawford <chad@cacrawford.org>"]
 license = "MIT"
