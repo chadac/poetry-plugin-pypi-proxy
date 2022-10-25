@@ -1,4 +1,5 @@
 import hashlib
+import re
 
 
 def get_repo_id(repo_url: str) -> str:
@@ -15,10 +16,4 @@ def get_repo_id(repo_url: str) -> str:
 
 def parse_url(url: str) -> str:
     """Remove suffix from url appropriately so it can be used by the proxy object."""
-    to_remove = ["simple", "simple/"]
-    for rem in to_remove:
-        if url.endswith(rem):
-            new_url = url[: -len(rem)]
-            break
-
-    return new_url
+    return re.sub("/?(simple/?)?$", "", url)
