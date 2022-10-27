@@ -66,15 +66,17 @@ def generate_poetry_source_config(url: str) -> PoetrySourceConfig:
         raise ValueError("Malformed URL either the scheme or hostname is missing")
     cleaned_url = url_parts.scheme + "://" + url_parts.hostname + url_parts.path
     parsed_and_cleaned = parse_url(cleaned_url)
-    if url_parts.username != "" and url_parts.password != "":
+    if url_parts.username is not None and url_parts.password is not None:
         return PoetrySourceConfig(
             url=parsed_and_cleaned,
             username=url_parts.username,
             password=url_parts.password,
         )
-    elif url_parts.username != "" and url_parts.password == "":
+    elif url_parts.username is not None and (
+        url_parts.password == "" or url_parts.password is None
+    ):
         return PoetrySourceConfig(url=parsed_and_cleaned, username=url_parts.username)
-    elif url_parts.username == "" and url_parts.password != "":
+    elif url_parts.username is None and url_parts.password is not None:
         raise ValueError("Password was passed in Proxy URL without a username.")
     else:
         return PoetrySourceConfig(url=parsed_and_cleaned)
