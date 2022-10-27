@@ -1,20 +1,59 @@
-from poetry_plugin_pypi_proxy.utils import parse_url
+import pytest
+
+from poetry_plugin_pypi_proxy.utils import (
+    PoetrySourceConfig,
+    generate_poetry_source_config,
+    parse_url,
+)
 
 
-def test_parse_url():
-    input = [
-        "http://proxy.org/pypi/simple",
-        "http://proxy.org/pypi/simple/",
-        "http://proxy.org/pypi/simple/simple",
-        "http://proxy.org/pypi/simple/simple/",
-    ]
-    expected = [
-        "http://proxy.org/pypi/",
-        "http://proxy.org/pypi/",
-        "http://proxy.org/pypi/simple/",
-        "http://proxy.org/pypi/simple/",
-    ]
+@pytest.mark.parametrize(
+    ["input_urls", "expected_url"],
+    [
+        (
+            [
+                "http://proxy.org/pypi",
+                "http://proxy.org/pypi/",
+                "http://proxy.org/pypi/simple",
+                "http://proxy.org/pypi/simple/",
+            ],
+            "http://proxy.org/pypi",
+        ),
+        (
+            [
+                "http://proxy.org/pypi/simple/simple",
+                "http://proxy.org/pypi/simple/simple/",
+            ],
+            "http://proxy.org/pypi/simple",
+        ),
+    ],
+)
+def test_parse_url(input_urls: list[str], expected_url: str):
+    for input_url in input_urls:
+        actual_url = parse_url(input_url)
+        assert actual_url == expected_url
 
-    for index in range(len(input)):
-        actual = parse_url(input[index])
-        assert actual == expected[index]
+
+@pytest.mark.parametrize(
+    ["input_url", "expected_output"],
+    [
+        (
+            "http://fake:faked@proxy.org/pypi/simple",
+            {"url": "http://proxy.org/pypi", "username": "fake", "password": "faked"},
+        ),
+        (
+            "http://fake:@proxy.org/pypi/simple",
+            {"url": "http://proxy.org/pypi", "username": "fake"},
+        ),
+    ],
+)
+def test_generate_poetry_source_config(
+    input_url: str, expected_output: PoetrySourceConfig
+):
+    actual = generate_poetry_source_config(input_url)
+    assert actual == expected_output
+
+
+def test_no_user_name():
+    with pytest.raises(ValueError):
+        generate_poetry_source_config("http://:faked@proxy.org/pypi/simple")

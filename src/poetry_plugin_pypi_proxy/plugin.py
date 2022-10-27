@@ -11,7 +11,7 @@ from poetry.plugins.plugin import Plugin
 from poetry.poetry import Poetry
 from poetry.repositories.legacy_repository import LegacyRepository
 
-from poetry_plugin_pypi_proxy.utils import get_repo_id, parse_url
+from poetry_plugin_pypi_proxy.utils import generate_poetry_source_config, get_repo_id
 
 
 class LegacyProxyRepository(LegacyRepository):
@@ -66,7 +66,8 @@ class PypiProxyPlugin(Plugin):
             return
 
         # Parse the proper for PIP_INDEX_URL but not for publishing.
-        proxy_url = parse_url(proxy_url)
+        parsed_url = generate_poetry_source_config(proxy_url)
+        proxy_url = parsed_url["url"]
 
         # Add debug message so that users are certain the substitution happens
         io.write_line(
@@ -77,6 +78,7 @@ class PypiProxyPlugin(Plugin):
         # Generate unique string for project root
         proxy_id = get_repo_id(proxy_url)
 
+        poetry.config._config["repository"] = {proxy_id: parsed_url}
         # Set up the proxy as the default, remove
         poetry.pool._default = False
         poetry.pool.remove_repository("pypi")
@@ -88,8 +90,7 @@ class PypiProxyPlugin(Plugin):
         # Add default repository
         poetry.pool.add_repository(
             LegacyProxyRepository(
-                name=proxy_id,
-                url=f"{proxy_url}simple/",
+                name=proxy_id, url=f"{proxy_url}simple/", config=poetry.config._config
             ),
             default=True,
         )
@@ -99,4 +100,3 @@ class PypiProxyPlugin(Plugin):
             "repository"
         ):
             io.input.set_option("repository", proxy_id)
-            poetry.config._config["repositories"] = {proxy_id: {"url": proxy_url}}
