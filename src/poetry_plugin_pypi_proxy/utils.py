@@ -62,6 +62,8 @@ def generate_poetry_source_config(url: str) -> PoetrySourceConfig:
 
     """
     url_parts = urlparse(url)
+    if url_parts.scheme == "" or url_parts.hostname is None:
+        raise ValueError("Malformed URL either the scheme or hostname is missing")
     cleaned_url = url_parts.scheme + "://" + url_parts.hostname + url_parts.path
     parsed_and_cleaned = parse_url(cleaned_url)
     if url_parts.username != "" and url_parts.password != "":

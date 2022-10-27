@@ -28,7 +28,7 @@ from poetry_plugin_pypi_proxy.utils import (
         ),
     ],
 )
-def test_parse_url(input_urls: list[str], expected_url: str):
+def test_parse_url(input_urls: list[str], expected_url: str) -> None:
     for input_url in input_urls:
         actual_url = parse_url(input_url)
         assert actual_url == expected_url
@@ -49,11 +49,11 @@ def test_parse_url(input_urls: list[str], expected_url: str):
 )
 def test_generate_poetry_source_config(
     input_url: str, expected_output: PoetrySourceConfig
-):
+) -> None:
     actual = generate_poetry_source_config(input_url)
     assert actual == expected_output
 
 
-def test_no_user_name():
+def test_no_user_name() -> None:
     with pytest.raises(ValueError):
         generate_poetry_source_config("http://:faked@proxy.org/pypi/simple")

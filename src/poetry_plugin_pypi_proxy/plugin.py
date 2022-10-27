@@ -66,8 +66,8 @@ class PypiProxyPlugin(Plugin):
             return
 
         # Parse the proper for PIP_INDEX_URL but not for publishing.
-        parsed_url = generate_poetry_source_config(proxy_url)
-        proxy_url = parsed_url["url"]
+        source_config = generate_poetry_source_config(proxy_url)
+        proxy_url = source_config["url"]
 
         # Add debug message so that users are certain the substitution happens
         io.write_line(
@@ -78,7 +78,7 @@ class PypiProxyPlugin(Plugin):
         # Generate unique string for project root
         proxy_id = get_repo_id(proxy_url)
 
-        poetry.config._config["repository"] = {proxy_id: parsed_url}
+        poetry.config._config["repository"] = {proxy_id: source_config}
         # Set up the proxy as the default, remove
         poetry.pool._default = False
         poetry.pool.remove_repository("pypi")
