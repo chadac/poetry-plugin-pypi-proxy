@@ -65,7 +65,7 @@ jobs:
           echo "$HOME/.local/bin" >> $GITHUB_PATH
       - name: Install dependencies
         run: |
-          poetry install --only test
+          poetry install --only main --only test
           poetry run pip install ${{ matrix.poetry-version }}
       - name: Run tests
         run: poetry run pytest
