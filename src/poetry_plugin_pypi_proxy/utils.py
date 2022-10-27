@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import hashlib
 import re
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypedDict
 from urllib.parse import urlparse
 
 if TYPE_CHECKING:
-    from typing_extensions import NotRequired, TypedDict
+    from typing_extensions import NotRequired
 
 
 class PoetrySourceConfig(TypedDict):
