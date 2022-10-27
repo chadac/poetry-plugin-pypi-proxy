@@ -42,7 +42,7 @@ def test_parse_url(input_urls: list[str], expected_url: str) -> None:
             {"url": "http://proxy.org/pypi", "username": "fake", "password": "faked"},
         ),
         (
-            "http://fake:@proxy.org/pypi/simple",
+            "http://fake@proxy.org/pypi/simple",
             {"url": "http://proxy.org/pypi", "username": "fake"},
         ),
     ],
@@ -56,4 +56,4 @@ def test_generate_poetry_source_config(
 
 def test_no_user_name() -> None:
     with pytest.raises(ValueError):
-        generate_poetry_source_config("http://:faked@proxy.org/pypi/simple")
+        generate_poetry_source_config("://proxy.org/pypi/simple")

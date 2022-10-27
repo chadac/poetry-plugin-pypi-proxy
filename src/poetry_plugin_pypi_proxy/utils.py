@@ -78,7 +78,5 @@ def generate_poetry_source_config(url: str) -> PoetrySourceConfig:
         url_parts.password == "" or url_parts.password is None
     ):
         return PoetrySourceConfig(url=parsed_and_cleaned, username=url_parts.username)
-    elif url_parts.username is None and url_parts.password is not None:
-        raise ValueError("Password was passed in Proxy URL without a username.")
     else:
         return PoetrySourceConfig(url=parsed_and_cleaned)
