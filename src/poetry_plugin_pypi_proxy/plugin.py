@@ -78,7 +78,13 @@ class PypiProxyPlugin(Plugin):
         # Generate unique string for project root
         proxy_id = get_repo_id(proxy_url)
 
+        # Create entries in the config for the repo and Auth if we have it
         poetry.config._config["repository"] = {proxy_id: source_config}
+        if source_config.get("username") is not None:
+            poetry.config._config["http-basic"][proxy_id] = {
+                "username": source_config.get("username"),
+                "password": source_config.get("password"),
+            }
         # Set up the proxy as the default, remove
         poetry.pool._default = False
         poetry.pool.remove_repository("pypi")
@@ -90,7 +96,7 @@ class PypiProxyPlugin(Plugin):
         # Add default repository
         poetry.pool.add_repository(
             LegacyProxyRepository(
-                name=proxy_id, url=f"{proxy_url}simple/", config=poetry.config._config
+                name=proxy_id, url=f"{proxy_url}simple/", config=poetry.config
             ),
             default=True,
         )
