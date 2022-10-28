@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pytest
+from poetry.utils.password_manager import HTTPAuthCredential
 
 from poetry_plugin_pypi_proxy.utils import (
     PoetryAuthConfig,
@@ -41,11 +42,17 @@ def test_parse_url(input_urls: list[str], expected_url: str) -> None:
     [
         (
             "http://fake:faked@proxy.org/pypi/simple",
-            {"url": "http://proxy.org/pypi", "username": "fake", "password": "faked"},
+            PoetryAuthConfig(
+                url="http://proxy.org/pypi",
+                http_auth=HTTPAuthCredential(username="fake", password="faked"),
+            ),
         ),
         (
             "http://fake@proxy.org/pypi/simple",
-            {"url": "http://proxy.org/pypi", "username": "fake"},
+            PoetryAuthConfig(
+                url="http://proxy.org/pypi",
+                http_auth=HTTPAuthCredential(username="fake"),
+            ),
         ),
     ],
 )
