@@ -67,7 +67,7 @@ class PypiProxyPlugin(Plugin):
 
         # Parse the proper for PIP_INDEX_URL but not for publishing.
         auth_config = generate_poetry_auth_config(proxy_url)
-        proxy_url = auth_config["url"]
+        proxy_url = auth_config.url
 
         # Add debug message so that users are certain the substitution happens
         io.write_line(
@@ -79,7 +79,7 @@ class PypiProxyPlugin(Plugin):
         proxy_id = get_repo_id(proxy_url)
 
         # Create entries in the config for the repo and Auth if we have it
-        poetry.config._config["repository"] = {proxy_id: auth_config}
+        poetry.config._config["repository"] = {proxy_id: auth_config.url}
         if auth_config.http_auth is not None:
             poetry.config._config["http-basic"][proxy_id] = {
                 "username": auth_config.http_auth.username,
