@@ -3,8 +3,8 @@ from __future__ import annotations
 import pytest
 
 from poetry_plugin_pypi_proxy.utils import (
-    PoetrySourceConfig,
-    generate_poetry_source_config,
+    PoetryAuthConfig,
+    generate_poetry_auth_config,
     parse_url,
 )
 
@@ -50,12 +50,12 @@ def test_parse_url(input_urls: list[str], expected_url: str) -> None:
     ],
 )
 def test_generate_poetry_source_config(
-    input_url: str, expected_output: PoetrySourceConfig
+    input_url: str, expected_output: PoetryAuthConfig
 ) -> None:
-    actual = generate_poetry_source_config(input_url)
+    actual = generate_poetry_auth_config(input_url)
     assert actual == expected_output
 
 
 def test_no_user_name() -> None:
     with pytest.raises(ValueError):
-        generate_poetry_source_config("://proxy.org/pypi/simple")
+        generate_poetry_auth_config("://proxy.org/pypi/simple")

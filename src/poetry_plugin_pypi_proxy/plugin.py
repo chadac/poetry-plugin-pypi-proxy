@@ -11,7 +11,7 @@ from poetry.plugins.plugin import Plugin
 from poetry.poetry import Poetry
 from poetry.repositories.legacy_repository import LegacyRepository
 
-from poetry_plugin_pypi_proxy.utils import generate_poetry_source_config, get_repo_id
+from poetry_plugin_pypi_proxy.utils import generate_poetry_auth_config, get_repo_id
 
 
 class LegacyProxyRepository(LegacyRepository):
@@ -66,8 +66,8 @@ class PypiProxyPlugin(Plugin):
             return
 
         # Parse the proper for PIP_INDEX_URL but not for publishing.
-        source_config = generate_poetry_source_config(proxy_url)
-        proxy_url = source_config["url"]
+        auth_config = generate_poetry_auth_config(proxy_url)
+        proxy_url = auth_config["url"]
 
         # Add debug message so that users are certain the substitution happens
         io.write_line(
@@ -79,11 +79,11 @@ class PypiProxyPlugin(Plugin):
         proxy_id = get_repo_id(proxy_url)
 
         # Create entries in the config for the repo and Auth if we have it
-        poetry.config._config["repository"] = {proxy_id: source_config}
-        if source_config.get("username") is not None:
+        poetry.config._config["repository"] = {proxy_id: auth_config}
+        if auth_config.http_auth is not None:
             poetry.config._config["http-basic"][proxy_id] = {
-                "username": source_config.get("username"),
-                "password": source_config.get("password"),
+                "username": auth_config.http_auth.username,
+                "password": auth_config.http_auth.password,
             }
         # Set up the proxy as the default, remove
         poetry.pool._default = False

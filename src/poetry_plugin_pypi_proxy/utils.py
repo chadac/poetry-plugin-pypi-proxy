@@ -2,20 +2,21 @@ from __future__ import annotations
 
 import hashlib
 import re
+from dataclasses import dataclass
 from urllib.parse import urlparse
 
-from typing_extensions import NotRequired, TypedDict
+from poetry.utils.password_manager import HTTPAuthCredential
 
 
-class PoetrySourceConfig(TypedDict):
+@dataclass
+class PoetryAuthConfig:
     """
     This class is used for being able to represent what is needed for
     the source for Poetry
     """
 
-    username: NotRequired[str]
-    password: NotRequired[str]
     url: str
+    http_auth: HTTPAuthCredential | None
 
 
 def get_repo_id(repo_url: str) -> str:
@@ -47,7 +48,7 @@ def parse_url(url: str) -> str:
     return re.sub("/?(simple/?)?$", "", url)
 
 
-def generate_poetry_source_config(url: str) -> PoetrySourceConfig:
+def generate_poetry_auth_config(url: str) -> PoetryAuthConfig:
     """
     We need to account for a url with auth data to pass into Poetry with
     the proxy URL
@@ -67,14 +68,15 @@ def generate_poetry_source_config(url: str) -> PoetrySourceConfig:
     cleaned_url = url_parts.scheme + "://" + url_parts.hostname + url_parts.path
     parsed_and_cleaned = parse_url(cleaned_url)
     if url_parts.username is not None and url_parts.password is not None:
-        return PoetrySourceConfig(
+        return PoetryAuthConfig(
             url=parsed_and_cleaned,
-            username=url_parts.username,
-            password=url_parts.password,
+            http_auth=HTTPAuthCredential(url_parts.username, url_parts.password),
         )
     elif url_parts.username is not None and (
         url_parts.password == "" or url_parts.password is None
     ):
-        return PoetrySourceConfig(url=parsed_and_cleaned, username=url_parts.username)
+        return PoetryAuthConfig(
+            url=parsed_and_cleaned, http_auth=HTTPAuthCredential(url_parts.username)
+        )
     else:
-        return PoetrySourceConfig(url=parsed_and_cleaned)
+        return PoetryAuthConfig(url=parsed_and_cleaned, http_auth=None)
