@@ -107,7 +107,6 @@ class PypiProxyPlugin(Plugin):
             default=True,
         )
 
-        print(io.input.arguments)
         # If this is a publish command to Pypi, we'll silenly redirect to the proxy
         if io.input.arguments["command"] == "publish" and not io.input.option(
             "repository"

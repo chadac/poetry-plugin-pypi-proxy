@@ -80,7 +80,10 @@ def generate_poetry_auth_config(url: str) -> PoetryAuthConfig:
     url_parts = urlparse(url)
     if url_parts.scheme == "" or url_parts.hostname is None:
         raise ValueError("Malformed URL either the scheme or hostname is missing")
-    cleaned_url = f"{url_parts.scheme}://{url_parts.hostname}:{url_parts.port}/{url_parts.path}"
+    port = ""
+    if url_parts.port is not None:
+        port = f":{url_parts.port}"
+    cleaned_url = f"{url_parts.scheme}://{url_parts.hostname}{port}{url_parts.path}"
     parsed_and_cleaned = parse_url(cleaned_url)
     if url_parts.username is not None and url_parts.password is not None:
         return PoetryAuthConfig(

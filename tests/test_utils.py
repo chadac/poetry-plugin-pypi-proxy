@@ -48,6 +48,13 @@ def test_parse_url(input_urls: list[str], expected_url: str) -> None:
             ),
         ),
         (
+            "http://fake:faked@proxy.org:8080/pypi/simple",
+            PoetryAuthConfig(
+                url="http://proxy.org:8080/pypi",
+                http_auth=HTTPAuthCredential(username="fake", password="faked"),
+            ),
+        ),
+        (
             "http://fake@proxy.org/pypi/simple",
             PoetryAuthConfig(
                 url="http://proxy.org/pypi",
