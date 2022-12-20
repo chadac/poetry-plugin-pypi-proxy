@@ -6,12 +6,16 @@ import os
 from cleo.io.io import IO
 from cleo.io.outputs.output import Verbosity
 from poetry.core.packages.package import Package
-from poetry.core.semver.version import Version
 from poetry.plugins.plugin import Plugin
 from poetry.poetry import Poetry
 from poetry.repositories.legacy_repository import LegacyRepository
 
-from poetry_plugin_pypi_proxy.utils import generate_poetry_auth_config, get_repo_id
+from poetry_plugin_pypi_proxy.utils import (
+    POETRY_VERSION,
+    Version,
+    generate_poetry_auth_config,
+    get_repo_id,
+)
 
 
 class LegacyProxyRepository(LegacyRepository):
@@ -79,28 +83,31 @@ class PypiProxyPlugin(Plugin):
         proxy_id = get_repo_id(proxy_url)
 
         # Create entries in the config for the repo and Auth if we have it
-        poetry.config._config["repository"] = {proxy_id: auth_config.url}
+        poetry.config._config["repositories"] = {proxy_id: {"url": auth_config.url}}
         if auth_config.http_auth is not None:
             poetry.config._config["http-basic"][proxy_id] = {
                 "username": auth_config.http_auth.username,
                 "password": auth_config.http_auth.password,
             }
+
         # Set up the proxy as the default, remove
         poetry.pool._default = False
-        poetry.pool.remove_repository("pypi")
+        if poetry.pool.has_repository("pypi"):
+            poetry.pool.remove_repository("pypi")
 
         # resolve bug in old Poetry
-        if "pypi" in poetry.pool._lookup:
+        if POETRY_VERSION < (1, 2, 1):
             del poetry.pool._lookup["pypi"]
 
         # Add default repository
         poetry.pool.add_repository(
             LegacyProxyRepository(
-                name=proxy_id, url=f"{proxy_url}simple/", config=poetry.config
+                name=proxy_id, url=f"{proxy_url}/simple/", config=poetry.config
             ),
             default=True,
         )
 
+        print(io.input.arguments)
         # If this is a publish command to Pypi, we'll silenly redirect to the proxy
         if io.input.arguments["command"] == "publish" and not io.input.option(
             "repository"

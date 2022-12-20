@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "sample-project"
+version = "0.1.0"
+description = "Testing Poetry"
+authors = ["Chad Crawford <chadcr@amazon.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "sample_project"}]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+sample-dependency = "^0.0.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

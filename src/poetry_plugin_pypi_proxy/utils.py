@@ -5,7 +5,22 @@ import re
 from dataclasses import dataclass
 from urllib.parse import urlparse
 
+import pkg_resources
 from poetry.utils.password_manager import HTTPAuthCredential
+
+POETRY_VERSION = tuple(
+    map(int, pkg_resources.get_distribution("poetry").version.split("."))
+)
+
+
+if POETRY_VERSION <= (1, 2, 1):
+    from poetry.core.semver.version import Version
+else:
+    from poetry.core.constraints.version import Version
+
+
+# stop pycln from removing the above import
+Version = Version
 
 
 @dataclass
@@ -65,7 +80,7 @@ def generate_poetry_auth_config(url: str) -> PoetryAuthConfig:
     url_parts = urlparse(url)
     if url_parts.scheme == "" or url_parts.hostname is None:
         raise ValueError("Malformed URL either the scheme or hostname is missing")
-    cleaned_url = url_parts.scheme + "://" + url_parts.hostname + url_parts.path
+    cleaned_url = f"{url_parts.scheme}://{url_parts.hostname}:{url_parts.port}/{url_parts.path}"
     parsed_and_cleaned = parse_url(cleaned_url)
     if url_parts.username is not None and url_parts.password is not None:
         return PoetryAuthConfig(
