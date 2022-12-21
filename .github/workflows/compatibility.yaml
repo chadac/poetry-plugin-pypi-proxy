@@ -1,0 +1,32 @@
+name: Compatibility Checks
+on:
+  schedule:
+    - cron: "0 6 * * 0"
+jobs:
+  compatibility-tests:
+    name: ${{ matrix.os }} / ${{ matrix.python-version }} / ${{ matrix.poetry-version }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-2022, macos-12]
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+        poetry-version:
+          - "git+https://github.com/python-poetry/poetry.git"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Setup env
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Bootstrap Poetry
+        run: |
+          pip install pipx
+          pipx install poetry
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Install dependencies
+        run: |
+          poetry install --only main --only test
+          poetry run pip install ${{ matrix.poetry-version }}
+      - name: Run tests
+        run: poetry run pytest
