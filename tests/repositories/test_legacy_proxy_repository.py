@@ -4,10 +4,10 @@ import shutil
 import urllib.parse as urlparse
 from pathlib import Path
 
-from poetry.core.semver.version import Version
 from poetry.repositories.link_sources.html import SimpleRepositoryPage
 
 from poetry_plugin_pypi_proxy.plugin import LegacyProxyRepository
+from poetry_plugin_pypi_proxy.utils import Version
 
 
 class MockRepository(LegacyProxyRepository):
