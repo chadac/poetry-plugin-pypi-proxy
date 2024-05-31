@@ -9,6 +9,7 @@ from poetry.core.packages.package import Package
 from poetry.plugins.plugin import Plugin
 from poetry.poetry import Poetry
 from poetry.repositories.legacy_repository import LegacyRepository
+from poetry.repositories.repository_pool import Priority
 
 from poetry_plugin_pypi_proxy.utils import (
     POETRY_VERSION,
@@ -108,7 +109,7 @@ class PypiProxyPlugin(Plugin):
             LegacyProxyRepository(
                 name=proxy_id, url=f"{proxy_url}/simple/", config=poetry.config
             ),
-            default=True,
+            priority=Priority.DEFAULT,
         )
 
         # If this is a publish command to Pypi, we'll silenly redirect to the proxy
