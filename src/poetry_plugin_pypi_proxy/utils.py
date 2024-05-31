@@ -1,16 +1,20 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.metadata
 import re
 from dataclasses import dataclass
 from urllib.parse import urlparse
 
-import pkg_resources
 from poetry.utils.password_manager import HTTPAuthCredential
 
-POETRY_VERSION = tuple(
-    map(int, pkg_resources.get_distribution("poetry").version.split(".")[:3])
-)
+# try:
+#     import pkg_resources
+#     POETRY_VERSION = tuple(
+#         map(int, pkg_resources.get_distribution("poetry").version.split(".")[:3])
+#     )
+# except ImportError:
+POETRY_VERSION = tuple(map(int, importlib.metadata.version("poetry").split(".")[:3]))
 
 
 if POETRY_VERSION <= (1, 2, 1):

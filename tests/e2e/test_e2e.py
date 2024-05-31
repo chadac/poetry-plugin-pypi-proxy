@@ -35,7 +35,8 @@ class MockApplication(Application):
         if self._poetry is not None:
             return self._poetry
         _poetry = super().poetry
-        root = _poetry._pyproject._file.parent
+        root = _poetry._pyproject.path.parent
+        # root = _poetry._pyproject._file.parent
         _poetry.config._config["cache-dir"] = str(root / ".virtualenvs")
         return _poetry
 
