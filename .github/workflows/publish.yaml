@@ -21,6 +21,7 @@ jobs:
         run: |
           pip install pipx
           pipx install poetry
+          poetry self add poetry-dynamic-versioning[plugin]
           echo "$HOME/.local/bin" >> $GITHUB_PATH
       - name: Build
         run: |

@@ -17,7 +17,7 @@ automatically redirected to the proxy as well.
 Start by installing Poetry with pipx:
 
     pipx install poetry
-    pipx runpip poetry install poetry-plugin-pypi-proxy
+    poetry self add poetry-plugin-pypi-proxy[plugin]
 
 If you have already installed poetry, you only need to run the second command.
 
