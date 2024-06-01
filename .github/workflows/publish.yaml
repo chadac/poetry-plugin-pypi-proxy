@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/<your-pypi-project-name>
+      url: https://pypi.org/p/poetry-plugin-pypi-proxy
     permissions:
       id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
@@ -24,6 +24,6 @@ jobs:
           echo "$HOME/.local/bin" >> $GITHUB_PATH
       - name: Build
         run: |
-          poetry run build
+          poetry build
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
