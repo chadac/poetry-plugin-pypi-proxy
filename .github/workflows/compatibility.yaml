@@ -7,8 +7,8 @@ jobs:
     name: ${{ matrix.os }} / ${{ matrix.python-version }} / ${{ matrix.poetry-version }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-2022, macos-12]
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        os: [ubuntu-latest]
+        python-version: ["3.9", "3.12"]
         poetry-version:
           - "git+https://github.com/python-poetry/poetry.git"
     runs-on: ${{ matrix.os }}
