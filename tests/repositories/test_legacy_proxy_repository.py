@@ -4,7 +4,7 @@ import shutil
 import urllib.parse as urlparse
 from pathlib import Path
 
-from poetry.repositories.link_sources.html import SimpleRepositoryPage
+from poetry.repositories.link_sources.html import HTMLPage
 
 from poetry_plugin_pypi_proxy.plugin import LegacyProxyRepository
 from poetry_plugin_pypi_proxy.utils import Version
@@ -16,13 +16,13 @@ class MockRepository(LegacyProxyRepository):
     def __init__(self) -> None:
         super().__init__("proxy", url="http://legacy.foo.bar", disable_cache=True)
 
-    def _get_page(self, name: str) -> SimpleRepositoryPage | None:
+    def _get_page(self, name: str) -> HTMLPage | None:
         fixture = self.FIXTURES / (name + ".html")
         if not fixture.exists():
             return None
 
         with fixture.open(encoding="utf-8") as f:
-            return SimpleRepositoryPage(self._url + "/" + name + ".html", f.read())
+            return HTMLPage(self._url + "/" + name + ".html", f.read())
 
     def _download(self, url: str, dest: Path) -> None:
         filename = urlparse.urlparse(url).path.rsplit("/")[-1]
